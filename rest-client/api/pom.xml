@@ -8,6 +8,14 @@
         <relativePath>../../</relativePath>
     </parent>
     <artifactId>arquillian-rest-client-api</artifactId>
+    <version>1.0.0.Alpha2-xworx</version>
     <name>Arquillian REST Client Extension: API</name>
     <description>Integrates a REST client API (using RestEasy Client Proxies) to facilitate testing REST endpoints</description>
+    <distributionManagement>
+        <repository>
+            <id>ait-thirdparty</id>
+            <name>AIT Third Party</name>
+            <url>http://xworx.ait.ac.at/nexus/content/repositories/thirdparty/</url>
+        </repository>
+    </distributionManagement>
 </project>
