@@ -27,4 +27,5 @@ import java.lang.annotation.Target;
 public @interface ArquillianResteasyResource {
 
     String value() default "rest";
+    String context() default "";
 }

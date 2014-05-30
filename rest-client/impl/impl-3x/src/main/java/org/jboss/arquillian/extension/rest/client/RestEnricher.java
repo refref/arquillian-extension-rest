@@ -47,7 +47,7 @@ public class RestEnricher extends BaseRestEnricher implements TestEnricher {
                                   ArquillianResteasyResource annotation, Consumes consumes, Produces produces) {
         Object value = null;
         Client client = ResteasyClientBuilder.newClient();
-        WebTarget webTarget = client.target(getBaseURL() + ((ArquillianResteasyResource) annotation).value());
+        WebTarget webTarget = client.target(getBaseURL(annotation.context()) + ((ArquillianResteasyResource) annotation).value());
         ResteasyWebTarget resteasyWebTarget = (ResteasyWebTarget) webTarget;
         if (ResteasyWebTarget.class.isAssignableFrom(clazz)) {
             value = resteasyWebTarget;
