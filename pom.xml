@@ -15,7 +15,7 @@
     <!-- Artifact Configuration -->
     <groupId>org.jboss.arquillian.extension</groupId>
     <artifactId>arquillian-rest-parent</artifactId>
-    <version>1.0.0.Alpha3</version>
+    <version>1.0.0.Alpha3-xworx</version>
     <packaging>pom</packaging>
 
     <name>Arquillian REST Extension: Parent</name>
@@ -34,7 +34,15 @@
         <url>git://github.com/arquillian/arquillian-extension-rest.git</url>
       <tag>1.0.0.Alpha3</tag>
   </scm>
-
+  
+    <distributionManagement>
+        <repository>
+            <id>ait-thirdparty</id>
+            <name>AIT Third Party</name>
+            <url>http://xworx.ait.ac.at/nexus/content/repositories/thirdparty/</url>
+        </repository>
+    </distributionManagement>
+    
     <developers>
         <developer>
             <id>arquillian.org</id>
@@ -73,7 +81,9 @@
 
     <modules>
         <module>rest-client</module>
+        <!--
         <module>warp-rest</module>
+        -->
     </modules>
 
     <build>
