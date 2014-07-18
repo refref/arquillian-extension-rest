@@ -43,7 +43,7 @@ public class RestEnricher extends BaseRestEnricher implements TestEnricher {
     {
         Object value;
         Client client = ResteasyClientBuilder.newClient();
-        WebTarget webTarget = client.target(getBaseURL() + annotation.value());
+        WebTarget webTarget = client.target(getBaseURL(annotation.context()) + annotation.value());
         final Map<String, String> headers = getHeaders(clazz, method);
         if (!headers.isEmpty()) {
             webTarget.register(new HeaderFilter(headers));

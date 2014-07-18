@@ -101,11 +101,22 @@ public abstract class BaseRestEnricher implements TestEnricher {
     protected abstract Object enrichByType(Class<?> clazz, Method method, ArquillianResteasyResource annotation, Consumes consumes, Produces produces);
 
     // Currently no way to share @ArquillianResource URL (URLResourceProvider) logic internally, copied logic
-    protected URI getBaseURL()
+    protected URI getBaseURL(){
+        return getBaseURL("");
+    }
+    protected URI getBaseURL(String contextName)
     {
         HTTPContext context = metaDataInst.get().getContext(HTTPContext.class);
-        if (allInSameContext(context.getServlets())) {
-            return context.getServlets().get(0).getBaseURI();
+        if (contextName.isEmpty()) {
+            if (allInSameContext(context.getServlets())) {
+                return context.getServlets().get(0).getBaseURI();
+            }
+        } else {
+            for(Servlet servlet : context.getServlets()){
+                if(servlet.getBaseURI().toASCIIString().matches(".*("+contextName+")/?$")){
+                    return servlet.getBaseURI();
+                }
+            }
         }
         throw new IllegalStateException("No baseURL found in HTTPContext");
     }

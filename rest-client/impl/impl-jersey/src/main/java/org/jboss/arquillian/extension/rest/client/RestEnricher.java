@@ -12,6 +12,8 @@ import javax.ws.rs.client.WebTarget;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
+import org.glassfish.jersey.client.ClientConfig;
+import org.jboss.arquillian.extension.rest.client.annotation.Providers;
 
 public class RestEnricher extends BaseRestEnricher implements TestEnricher {
 
@@ -19,8 +21,14 @@ public class RestEnricher extends BaseRestEnricher implements TestEnricher {
     protected Object enrichByType(Class<?> clazz, Method method, ArquillianResteasyResource annotation, Consumes consumes, Produces produces)
     {
         Object value;
-        Client client = JerseyClientBuilder.newClient();
-        WebTarget webTarget = client.target(getBaseURL() + annotation.value());
+        Providers providers = method.getDeclaringClass().getAnnotation(Providers.class);
+        Client client = null;
+        if (providers != null) {
+            client = JerseyClientBuilder.newClient(new ClientConfig(providers.value()));
+        } else {
+            client = JerseyClientBuilder.newClient();
+        }
+        WebTarget webTarget = client.target(getBaseURL(annotation.context()) + annotation.value());
         final Map<String, String> headers = getHeaders(clazz, method);
         if (!headers.isEmpty()) {
             webTarget.register(new HeaderFilter(headers));
