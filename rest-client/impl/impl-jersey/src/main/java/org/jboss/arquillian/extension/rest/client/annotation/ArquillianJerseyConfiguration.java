@@ -28,8 +28,9 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE})
 @Inherited
-public @interface Providers {
+public @interface ArquillianJerseyConfiguration {
 
-    Class[] value() default {};
+    Class[] providers() default {};
+    boolean log() default false;
     
 }

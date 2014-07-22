@@ -1,19 +1,20 @@
 package org.jboss.arquillian.extension.rest.client;
 
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.glassfish.jersey.client.JerseyWebTarget;
-import org.glassfish.jersey.client.proxy.WebResourceFactory;
-import org.jboss.arquillian.test.spi.TestEnricher;
-
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Map;
 import org.glassfish.jersey.client.ClientConfig;
-import org.jboss.arquillian.extension.rest.client.annotation.Providers;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.client.JerseyWebTarget;
+import org.glassfish.jersey.client.proxy.WebResourceFactory;
+import org.glassfish.jersey.filter.LoggingFilter;
+import org.jboss.arquillian.extension.rest.client.annotation.ArquillianJerseyConfiguration;
+import org.jboss.arquillian.test.spi.TestEnricher;
 
 public class RestEnricher extends BaseRestEnricher implements TestEnricher {
 
@@ -21,10 +22,13 @@ public class RestEnricher extends BaseRestEnricher implements TestEnricher {
     protected Object enrichByType(Class<?> clazz, Method method, ArquillianResteasyResource annotation, Consumes consumes, Produces produces)
     {
         Object value;
-        Providers providers = method.getDeclaringClass().getAnnotation(Providers.class);
-        Client client = null;
-        if (providers != null) {
-            client = JerseyClientBuilder.newClient(new ClientConfig(providers.value()));
+        ArquillianJerseyConfiguration jerseyConfig = method.getDeclaringClass().getAnnotation(ArquillianJerseyConfiguration.class);
+        Client client;
+        if (jerseyConfig != null) {
+            client = JerseyClientBuilder.newClient(new ClientConfig(jerseyConfig.providers()));
+            if (jerseyConfig.log()) {
+                client.register(new LoggingFilter(Logger.getLogger("os"), 10000));
+            }
         } else {
             client = JerseyClientBuilder.newClient();
         }
